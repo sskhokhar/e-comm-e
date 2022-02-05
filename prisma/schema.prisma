@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ShoppingPreferenceList {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+}
+
+model User {
+  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName               String
+  email                  String                   @unique
+  password               String
+  dob                    String
+  shoppingPreferenceList ShoppingPreferenceList[]
+  isActive               Boolean                  @default(false)
+  passwordResetToken     String?
+}
